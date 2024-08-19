@@ -6,25 +6,24 @@ interface NewUserButtonProps {
   onNinjaAdded: () => void;
 }
 
-const NewUserButton: React.FC<NewUserButtonProps> = ({ onNinjaAdded }) => {
+const DeleteNinjaButton: React.FC<NewUserButtonProps> = ({ onNinjaAdded }) => {
   const [name, setName] = useState('');
-  const [location, setLocation] = useState('');
-  const [initialBalance, setInitialBalance] = useState<number>(0);
+  const [reason, setReason] = useState('');
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const snackbar = useSnackbar();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     
-    const response = await fetch('/api/addNinja', {
+    const response = await fetch('/api/deleteNinja', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, initialBalance, location }),
+      body: JSON.stringify({ name, reason }),
     });
     if (response.status === 200) {
-      snackbar.enqueueSnackbar('User added successfully', { variant: 'success', autoHideDuration: 3000 });
+      snackbar.enqueueSnackbar('User deleted successfully', { variant: 'success', autoHideDuration: 3000 });
       onNinjaAdded(); // Trigger refresh in parent component
     } else {
         const result = await response.json(); // Parse the JSON response
@@ -33,8 +32,7 @@ const NewUserButton: React.FC<NewUserButtonProps> = ({ onNinjaAdded }) => {
     }
 
     setName('');
-    setLocation('');
-    setInitialBalance(0);
+    setReason('');
     setModalOpen(false); // Optionally close the modal after submit
   };
 
@@ -43,15 +41,15 @@ const NewUserButton: React.FC<NewUserButtonProps> = ({ onNinjaAdded }) => {
         <div>
           <button
             onClick={() => setModalOpen(true)}
-            className="bg-green-500 text-white px-8 py-2 rounded w-48 h-9"
+            className="bg-red-500 text-white px-8 py-2 rounded w-48 h-9"
           >
-            Add Ninja
+            Delete Ninja
           </button>
         </div>
       {modalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Add New Ninja</h2>
+            <h2 className="text-xl font-bold mb-4">Delete Existing Ninja</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Name</label>
@@ -64,21 +62,11 @@ const NewUserButton: React.FC<NewUserButtonProps> = ({ onNinjaAdded }) => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Location</label>
+                <label className="block text-sm font-medium text-gray-700">Reason</label>
                 <input
                   type="text"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-3 py-2"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Initial Balance</label>
-                <input
-                  type="number"
-                  value={initialBalance}
-                  onChange={(e) => setInitialBalance(Number(e.target.value))}
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-3 py-2"
                   required
                 />
@@ -95,7 +83,7 @@ const NewUserButton: React.FC<NewUserButtonProps> = ({ onNinjaAdded }) => {
                   type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded"
                 >
-                  Submit
+                  Confirm Delete
                 </button>
               </div>
             </form>
@@ -106,4 +94,4 @@ const NewUserButton: React.FC<NewUserButtonProps> = ({ onNinjaAdded }) => {
   );
 };
 
-export default NewUserButton;
+export default DeleteNinjaButton;

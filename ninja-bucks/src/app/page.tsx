@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import ButtonModal from './components/buttonModule';
 import NewUserButton from './components/newNinjaButton';
-
+import Login from './components/login';
+import DeleteNinjaButton from './components/deleteNinjaButton';
 import { SnackbarProvider } from "notistack";
 
 interface Ninja {
@@ -17,7 +18,7 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedNinja, setSelectedNinja] = useState<Ninja | null>(null);
   const [modalType, setModalType] = useState<'add' | 'subtract'>('add');
-
+  const [loggedIn, setLoggedIn] = useState<string | null>(null);
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -27,7 +28,12 @@ export default function Home() {
       fetchUsers(); // Fetch users when the modal is closed
     }
   }, [modalOpen]);
-
+  const handleLogin = (username: string) => {
+    setLoggedIn(username);
+  };
+  const handleLogout = () => {
+    setLoggedIn(null);
+  }
   const fetchUsers = async () => {
     try {
       const response = await fetch('/api/ninjas', { method: 'GET' });
@@ -45,11 +51,22 @@ export default function Home() {
   };
   return (
     <SnackbarProvider>
+      {/* if not logged in render login component here, else render the rest of the page*/}
+      {!loggedIn ? (
+        <Login onLogin={handleLogin} />
+      ) : (
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex-col">
           <div className="flex gap-4">
             <h1 className="text-2xl font-bold mb-4">Ninja List</h1>
             <NewUserButton onNinjaAdded={handleNinjaAdded}/>
+            <DeleteNinjaButton onNinjaAdded={handleNinjaAdded}/>
+            <button
+                onClick={handleLogout}
+                className="bg-gray-500 text-white px-8 rounded w-36 h-9"
+              >
+                Logout
+            </button>
           </div>
           
           <table className="min-w-full divide-y divide-gray-200">
@@ -106,7 +123,7 @@ export default function Home() {
             id={selectedNinja.id}
           />
         )}
-      </main>
+      </main>)}
     </SnackbarProvider>
   );
 }
