@@ -19,6 +19,9 @@ export default function Home() {
   const [selectedNinja, setSelectedNinja] = useState<Ninja | null>(null);
   const [modalType, setModalType] = useState<'add' | 'subtract'>('add');
   const [loggedIn, setLoggedIn] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -36,16 +39,17 @@ export default function Home() {
   }
   const fetchUsers = async () => {
     try {
-      const response = await fetch('/api/ninjas', { method: 'GET' });
-      if (!response.ok) {
-        throw new Error('Failed to fetch users');
-      }
-      const data = await response.json();
-      setNinjas(data.data);
+        const response = await fetch(`/api/ninjas?page=${currentPage}&limit=${20}`, { method: 'GET' });
+        if (!response.ok) {
+            throw new Error('Failed to fetch users');
+        }
+        const data = await response.json();
+        setNinjas(data.data);
+        setTotalPages(data.pagination.totalPages);
     } catch (error) {
-      console.error('Error fetching users:', error);
+        console.error('Error fetching users:', error);
     }
-  };
+};
   const handleNinjaAdded = () => {
     fetchUsers();
   };
@@ -114,6 +118,23 @@ export default function Home() {
               ))}
             </tbody>
           </table>
+          <div className="flex justify-between mt-4">
+              <button
+                onClick={() => setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))}
+                disabled={currentPage === 1}
+                className="bg-gray-300 text-black px-4 py-2 rounded"
+              >
+                Previous
+              </button>
+              <span>Page {currentPage} of {totalPages}</span>
+              <button
+                onClick={() => setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="bg-gray-300 text-black px-4 py-2 rounded"
+              >
+                Next
+              </button>
+            </div>
         </div>
         {selectedNinja && (
           <ButtonModal
