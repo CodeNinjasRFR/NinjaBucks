@@ -21,10 +21,10 @@ export default function Home() {
   const [loggedIn, setLoggedIn] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
-
+  const [filterText, setFilterText] = useState<string>(''); 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [currentPage, filterText]);
 
   useEffect(() => {
     if (!modalOpen) {
@@ -39,19 +39,26 @@ export default function Home() {
   }
   const fetchUsers = async () => {
     try {
-        const response = await fetch(`/api/ninjas?page=${currentPage}&limit=${20}`, { method: 'GET' });
+        const response = await fetch(`/api/ninjas?page=${currentPage}&limit=${10}&filter=${encodeURIComponent(filterText)}`, { method: 'GET' });
         if (!response.ok) {
             throw new Error('Failed to fetch users');
         }
         const data = await response.json();
         setNinjas(data.data);
         setTotalPages(data.pagination.totalPages);
+        console.log("totalPages"+totalPages);
     } catch (error) {
         console.error('Error fetching users:', error);
     }
 };
   const handleNinjaAdded = () => {
     fetchUsers();
+  };
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("changed")
+    setFilterText(event.target.value);
+    console.log(event.target.value)
+    setCurrentPage(1);
   };
   return (
     <SnackbarProvider>
@@ -61,17 +68,31 @@ export default function Home() {
       ) : (
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex-col">
-          <div className="flex gap-4">
-            <h1 className="text-2xl font-bold mb-4">Ninja List</h1>
-            <NewUserButton onNinjaAdded={handleNinjaAdded}/>
-            <DeleteNinjaButton onNinjaAdded={handleNinjaAdded}/>
-            <button
-                onClick={handleLogout}
-                className="bg-gray-500 text-white px-8 rounded w-36 h-9"
-              >
-                Logout
-            </button>
-          </div>
+        <div className="flex justify-between items-center mb-4">
+              {/* Left section with title and filter */}
+              <div className="flex items-center gap-4">
+                <h1 className="text-2xl font-bold">Ninja List</h1>
+                <input
+                  type="text"
+                  placeholder="Search here..."
+                  className="border px-4 py-2 rounded"
+                  value={filterText}
+                  onChange={handleFilterChange}
+                />
+              </div>
+
+              {/* Right section with buttons */}
+              <div className="flex gap-4">
+                <NewUserButton onNinjaAdded={handleNinjaAdded} />
+                <DeleteNinjaButton onNinjaAdded={handleNinjaAdded} />
+                <button
+                  onClick={handleLogout}
+                  className="bg-gray-500 text-white px-8 rounded h-9"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
           
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50 w-full">
