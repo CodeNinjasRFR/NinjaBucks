@@ -71,10 +71,9 @@ export default function Login({ onLogin }: LoginProps) {
         <div className="flex items-center justify-between max-w-screen-lg w-full px-4">
           {/* Image */}
           <div className="relative w-full md:w-1/2 lg:w-1/3">
-            <Image
+            <img
               src="/CodingNinja.png"
               alt="Description"
-              layout="responsive"
               width={500} // Adjust width as needed
               height={600} // Adjust height as needed
             />
