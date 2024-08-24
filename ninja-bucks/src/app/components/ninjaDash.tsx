@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import ninjaBucks from '../../../public/ninjaBucks.png';
+import ninjaBucks from '../../../public/ninjabucks.png';
 interface NinjaDashProps {
   name: string;
   onLogout: () => void;
