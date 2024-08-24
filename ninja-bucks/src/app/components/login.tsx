@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import Image from 'next/image';
-
+import CodeNinjaImage from '../../../public/codingNinja.png'
 interface LoginProps {
   onLogin: (username: string) => void;
 }
@@ -71,8 +71,8 @@ export default function Login({ onLogin }: LoginProps) {
         <div className="flex items-center justify-between max-w-screen-lg w-full px-4">
           {/* Image */}
           <div className="relative w-full md:w-1/2 lg:w-1/3">
-            <img
-              src="/CodingNinja.png"
+            <Image
+              src={CodeNinjaImage}
               alt="Description"
               width={500} // Adjust width as needed
               height={600} // Adjust height as needed
