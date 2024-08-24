@@ -75,8 +75,8 @@ export default function Login({ onLogin }: LoginProps) {
               src="/CodingNinja.png"
               alt="Description"
               layout="responsive"
-              width={1000} // Adjust width as needed
-              height={1200} // Adjust height as needed
+              width={500} // Adjust width as needed
+              height={600} // Adjust height as needed
             />
           </div>
 
