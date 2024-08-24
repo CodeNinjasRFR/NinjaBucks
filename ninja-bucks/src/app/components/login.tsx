@@ -1,7 +1,8 @@
 'use client'
 import React, { useState } from 'react';
 import Image from 'next/image';
-import CodeNinjaImage from '../../../public/codingNinja.png'
+import CodeNinjaImage from '../../../public/codingNinja.png';
+
 interface LoginProps {
   onLogin: (username: string) => void;
 }
@@ -15,13 +16,11 @@ export default function Login({ onLogin }: LoginProps) {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check if the username is 'admin' and prompt for a password
     if (username === 'admin') {
       setIsPasswordRequired(true);
       return;
     }
 
-    // Attempt to login the user
     try {
       const response = await fetch('/api/ninjaLogin', {
         method: 'POST',
@@ -47,7 +46,6 @@ export default function Login({ onLogin }: LoginProps) {
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Mock authentication for admin
     if (password === 'CNDojo.123') {
       onLogin(username);
       setError('');
@@ -83,8 +81,23 @@ export default function Login({ onLogin }: LoginProps) {
           <div className="relative max-w-md w-full bg-gradient-to-br from-purple-700 via-pink-500 to-orange-400 shadow-md rounded-lg p-6">
             <h2 className="text-2xl font-bold text-white mb-4">Login</h2>
             <form onSubmit={isPasswordRequired ? handleAdminLogin : handleLogin}>
-              <div className="mb-4">
-                <label htmlFor="username" className="block text-sm font-medium text-white">Username</label>
+              <div className="mb-6">
+                <div className="flex items-center">
+                  <label htmlFor="username" className="block text-sm font-medium text-white flex items-center">
+                    Username
+                    {/* Tooltip Icon */}
+                    <div className="relative ml-2 flex items-center group">
+                    <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M12 0c6.623 0 12 5.377 12 12s-5.377 12-12 12-12-5.377-12-12 5.377-12 12-12zm0 1c6.071 0 11 4.929 11 11s-4.929 11-11 11-11-4.929-11-11 4.929-11 11-11zm.5 17h-1v-9h1v9zm-.5-12c.466 0 .845.378.845.845 0 .466-.379.844-.845.844-.466 0-.845-.378-.845-.844 0-.467.379-.845.845-.845z" stroke='white'/>
+                    </svg>
+                      {/* Tooltip */}
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 p-2 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                      Ninjas - your username is just your first and last name 
+                        <br/>
+                        Ex - John Doe
+                      </div>
+                    </div>
+                  </label>
+                </div>
                 <input
                   type="text"
                   id="username"
@@ -128,6 +141,4 @@ export default function Login({ onLogin }: LoginProps) {
       </div>
     </div>
   );
-  
-  
 }
