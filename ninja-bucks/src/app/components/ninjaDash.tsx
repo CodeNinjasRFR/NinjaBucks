@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-
+import Image from 'next/image';
+import ninjaBucks from '../../../public/ninjaBucks.png';
 interface NinjaDashProps {
   name: string;
   onLogout: () => void;
@@ -72,7 +73,6 @@ const NinjaDash: React.FC<NinjaDashProps> = ({ name, onLogout }) => {
     );
   }
 
-
   if (!ninjaInfo) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -81,15 +81,16 @@ const NinjaDash: React.FC<NinjaDashProps> = ({ name, onLogout }) => {
     );
   }
 
-
   return (
-    <div className="flex min-h-screen p-6 bg-gray-100">
+    <div className="flex min-h-screen p-6 bg-cover bg-center" style={{ backgroundImage: 'url(/background.jpg)' }}>
       {/* Left side with image */}
-      <div className="flex-none w-1/3 pr-6">
-        <img
-          src="https://via.placeholder.com/300" // Replace with actual image URL
+      <div className="flex-none w-1/3 flex items-center justify-center pr-6">
+        <Image
+          src={ninjaBucks} // Replace with actual image URL
           alt={`${name} profile`}
           className="w-full h-auto rounded-lg shadow-lg"
+          height={300}
+          width={300}
         />
       </div>
 
